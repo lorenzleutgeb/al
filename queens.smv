@@ -37,7 +37,7 @@ ASSIGN
     TRUE  : 0;
   esac;
 
-  init(col[1]) := {1 .. 8};
+  init(col[1]) := {1..8};
   init(col[2]) := 0;
   init(col[3]) := 0;
   init(col[4]) := 0;
@@ -55,43 +55,43 @@ ASSIGN
   next(col[2]) := case
     col[2] > 0 : col[2];
     col[1] = 0 : 0;
-    TRUE       : {1 .. 8};
+    TRUE       : {1..8};
   esac;
 
   next(col[3]) := case
     col[3] > 0 : col[3];
     col[2] = 0 : 0;
-    TRUE       : {1 .. 8};
+    TRUE       : {1..8};
   esac;
 
   next(col[4]) := case
     col[4] > 0 : col[4];
     col[3] = 0 : 0;
-    TRUE       : {1 .. 8};
+    TRUE       : {1..8};
   esac;
 
   next(col[5]) := case
     col[5] > 0 : col[5];
     col[4] = 0 : 0;
-    TRUE       : {1 .. 8};
+    TRUE       : {1..8};
   esac;
 
   next(col[6]) := case
     col[6] > 0 : col[6];
     col[5] = 0 : 0;
-    TRUE       : {1 .. 8};
+    TRUE       : {1..8};
   esac;
 
   next(col[7]) := case
     col[7] > 0 : col[7];
     col[6] = 0 : 0;
-    TRUE       : {1 .. 8};
+    TRUE       : {1..8};
   esac;
 
   next(col[8]) := case
     col[8] > 0 : col[8];
     col[7] = 0 : 0;
-    TRUE       : {1 .. 8};
+    TRUE       : {1..8};
   esac;
 
 -- Transitions must repect the following constraints.
