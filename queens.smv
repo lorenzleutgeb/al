@@ -33,11 +33,11 @@ ASSIGN
 
   init(N) := 1;
   next(N) := case
-    N < 8 : N+1;
-    1     : 0;
+    N < 8 : N + 1;
+    TRUE  : 0;
   esac;
 
-  init(col[1]) := {1,2,3,4,5,6,7,8}; 
+  init(col[1]) := {1 .. 8};
   init(col[2]) := 0;
   init(col[3]) := 0;
   init(col[4]) := 0;
@@ -46,32 +46,164 @@ ASSIGN
   init(col[7]) := 0;
   init(col[8]) := 0;
 
--- once a queen has been placed, it cannot be moved
+-- States must respect the following constraints.
+-- 1. Once a queen has been placed, it cannot be moved.
+-- 2. Queens are placed row by row, starting with row 1.
 
   next(col[1]) := col[1];
 
-  next(col[2]) := ??
+  next(col[2]) := case
+    col[2] > 0 : col[2];
+    col[1] = 0 : 0;
+    TRUE       : {1 .. 8};
+  esac;
 
-  next(col[3]) := ??
+  next(col[3]) := case
+    col[3] > 0 : col[3];
+    col[2] = 0 : 0;
+    TRUE       : {1 .. 8};
+  esac;
 
-  next(col[4]) := ??
+  next(col[4]) := case
+    col[4] > 0 : col[4];
+    col[3] = 0 : 0;
+    TRUE       : {1 .. 8};
+  esac;
 
-  next(col[5]) := ??
+  next(col[5]) := case
+    col[5] > 0 : col[5];
+    col[4] = 0 : 0;
+    TRUE       : {1 .. 8};
+  esac;
 
-  next(col[6]) := ??
+  next(col[6]) := case
+    col[6] > 0 : col[6];
+    col[5] = 0 : 0;
+    TRUE       : {1 .. 8};
+  esac;
 
-  next(col[7]) := ??
+  next(col[7]) := case
+    col[7] > 0 : col[7];
+    col[6] = 0 : 0;
+    TRUE       : {1 .. 8};
+  esac;
 
-  next(col[8]) := ??
-
+  next(col[8]) := case
+    col[8] > 0 : col[8];
+    col[7] = 0 : 0;
+    TRUE       : {1 .. 8};
+  esac;
 
 -- Transitions must repect the following constraints.
 -- 1. At each step, we cannot place a queen in the same column as a  previous one;
+
+TRANS N = 2 -> (
+  next(col[2]) != col[1]
+);
+
+TRANS N = 3 -> (
+  next(col[3]) != col[1] &
+  next(col[3]) != col[2]
+);
+
+TRANS N = 4 -> (
+  next(col[4]) != col[1] &
+  next(col[4]) != col[2] &
+  next(col[4]) != col[3]
+);
+
+TRANS N = 5 -> (
+  next(col[5]) != col[1] &
+  next(col[5]) != col[2] &
+  next(col[5]) != col[3] &
+  next(col[5]) != col[4]
+);
+
+TRANS N = 6 -> (
+  next(col[6]) != col[1] &
+  next(col[6]) != col[2] &
+  next(col[6]) != col[3] &
+  next(col[6]) != col[4] &
+  next(col[6]) != col[5]
+);
+
+TRANS N = 7 -> (
+  next(col[7]) != col[1] &
+  next(col[7]) != col[2] &
+  next(col[7]) != col[3] &
+  next(col[7]) != col[4] &
+  next(col[7]) != col[5] &
+  next(col[7]) != col[6]
+);
+
+TRANS N = 8 -> (
+  next(col[8]) != col[1] &
+  next(col[8]) != col[2] &
+  next(col[8]) != col[3] &
+  next(col[8]) != col[4] &
+  next(col[8]) != col[5] &
+  next(col[8]) != col[6] &
+  next(col[8]) != col[7]
+);
+
 -- 2. At each step, we cannot place a queen if it has the same value
 --    (row + col) as a previous one (otherwise it would be under attack)
 -- 3. At each step, we cannot place a queen if it has the same value
 --    (row - col) as a previous one (otherwise it would be under attack)
 
+TRANS N = 2 -> (
+  abs(next(col[2]) - col[1]) != 1
+);
+
+TRANS N = 3 -> (
+  abs(next(col[3]) - col[1]) != 2 &
+  abs(next(col[3]) - col[2]) != 1
+);
+
+TRANS N = 4 -> (
+  abs(next(col[4]) - col[1]) != 3 &
+  abs(next(col[4]) - col[2]) != 2 &
+  abs(next(col[4]) - col[3]) != 1
+);
+
+TRANS N = 5 -> (
+  abs(next(col[5]) - col[1]) != 4 &
+  abs(next(col[5]) - col[2]) != 3 &
+  abs(next(col[5]) - col[3]) != 2 &
+  abs(next(col[5]) - col[4]) != 1
+);
+
+TRANS N = 6 -> (
+  abs(next(col[6]) - col[1]) != 5 &
+  abs(next(col[6]) - col[2]) != 4 &
+  abs(next(col[6]) - col[3]) != 3 &
+  abs(next(col[6]) - col[4]) != 2 &
+  abs(next(col[6]) - col[5]) != 1
+);
+
+TRANS N = 7 -> (
+  abs(next(col[7]) - col[1]) != 6 &
+  abs(next(col[7]) - col[2]) != 5 &
+  abs(next(col[7]) - col[3]) != 4 &
+  abs(next(col[7]) - col[4]) != 3 &
+  abs(next(col[7]) - col[5]) != 2 &
+  abs(next(col[7]) - col[6]) != 1
+);
+
+TRANS N = 8 -> (
+  abs(next(col[8]) - col[1]) != 7 &
+  abs(next(col[8]) - col[2]) != 6 &
+  abs(next(col[8]) - col[3]) != 5 &
+  abs(next(col[8]) - col[4]) != 4 &
+  abs(next(col[8]) - col[5]) != 3 &
+  abs(next(col[8]) - col[6]) != 2 &
+  abs(next(col[8]) - col[7]) != 1
+);
 
 -- VERIFICATION FORMULAS
 -- a spec to find a solution to the problem both in LTL and CTL
+
+-- We always place 8 queens.
+SPEC AF N = 0;
+
+LTLSPEC F N = 0;

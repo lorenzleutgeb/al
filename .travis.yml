@@ -3,4 +3,4 @@ install:
 
 script:
   - ./NuSMV -v 3 river.smv
-  - ./NuSMV -v 3 queens.smv
+  - ./NuSMV -bmc -v 3 queens.smv
