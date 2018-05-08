@@ -1,0 +1,6 @@
+install:
+  - curl -L "http://nusmv.fbk.eu/distrib/NuSMV-2.6.0-zchaff-linux64.tar.gz" | tar --extract --gzip --strip-components=2 "NuSMV-2.6.0-Linux/bin/NuSMV"
+
+script:
+  - ./NuSMV -v 3 river.smv
+  - ./NuSMV -v 3 queens.smv
