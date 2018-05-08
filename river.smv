@@ -1,0 +1,40 @@
+MODULE main
+VAR
+  c : 0..3; -- Number of cannibals that are on the wrong side.
+  m : 0..3; -- Number of missionaries that are on the wrong side.
+  b : boolean; -- Number of boats (max. 1) that are on the wrong side.
+
+  mb : 0..2; -- Number of missionaries on the b.
+  cb : 0..2; -- Number of cannibals on the b.
+
+INVAR mb + cb > 0  -- There is always someone on the boat (no run wasted).
+INVAR mb + cb <= 2 -- Boat has a maximum capacity of 2 people.
+
+-- In the initial state, everything is on the wrong side.
+ASSIGN
+  init(c) := 3;
+  init(m) := 3;
+  init(b) := TRUE;
+
+-- The boat is not on the wrong side. This means that in the next side:
+--  1. The boat will be on the wrong side (it travels the river).
+--  2. The number of people on the wrong side will increase respectively.
+TRANS !b ->
+  next(b) = TRUE &
+  next(c) = c + cb &
+  next(m) = m + mb
+
+-- Analogous.
+TRANS b ->
+  next(b) = FALSE &
+  next(c) = c - cb &
+  next(m) = m - mb
+
+-- Goal is reached if no one is on the wrong side. Safety is met if there are
+-- always more missionaries than cannibals on either side.
+DEFINE
+  safe := (m < 3 -> c >= m) & (m > 0 -> c <= m);
+  goal := c = 0 & m = 0;
+
+SPEC ! E[safe U goal]
+
