@@ -24,18 +24,15 @@ VAR
 
 -- for each row 1..8, we store the column 1..8 in which a queen is placed
 -- Value 0 is used to initialise the variables.
-  col           : array 1..8 of 0..8;
+  col : array 1..8 of 0..8;
 
 ASSIGN
--- at each step we place one queen
--- N=1 is the initial step and at the next step a queen will be placed in row 2, and so on
--- when we have finished, we set N to zero
+-- At each step we place one queen.
+-- N = 1 is the initial step and at the next step a queen will be placed in row
+-- 2, and so on. When we have finished, we set N = 0.
 
   init(N) := 1;
-  next(N) := case
-    N < 8 : N + 1;
-    TRUE  : 0;
-  esac;
+  next(N) := (N + 1) mod 9;
 
   init(col[1]) := {1..8};
   init(col[2]) := 0;
@@ -95,82 +92,37 @@ ASSIGN
   esac;
 
 -- Transitions must repect the following constraints.
--- 1. At each step, we cannot place a queen in the same column as a  previous one;
-
-TRANS N = 2 -> (
-  next(col[2]) != col[1]
-);
-
-TRANS N = 3 -> (
-  next(col[3]) != col[1] &
-  next(col[3]) != col[2]
-);
-
-TRANS N = 4 -> (
-  next(col[4]) != col[1] &
-  next(col[4]) != col[2] &
-  next(col[4]) != col[3]
-);
-
-TRANS N = 5 -> (
-  next(col[5]) != col[1] &
-  next(col[5]) != col[2] &
-  next(col[5]) != col[3] &
-  next(col[5]) != col[4]
-);
-
-TRANS N = 6 -> (
-  next(col[6]) != col[1] &
-  next(col[6]) != col[2] &
-  next(col[6]) != col[3] &
-  next(col[6]) != col[4] &
-  next(col[6]) != col[5]
-);
-
-TRANS N = 7 -> (
-  next(col[7]) != col[1] &
-  next(col[7]) != col[2] &
-  next(col[7]) != col[3] &
-  next(col[7]) != col[4] &
-  next(col[7]) != col[5] &
-  next(col[7]) != col[6]
-);
-
-TRANS N = 8 -> (
-  next(col[8]) != col[1] &
-  next(col[8]) != col[2] &
-  next(col[8]) != col[3] &
-  next(col[8]) != col[4] &
-  next(col[8]) != col[5] &
-  next(col[8]) != col[6] &
-  next(col[8]) != col[7]
-);
-
+-- 1. At each step, we cannot place a queen in the same column as a
+--    previous one;
 -- 2. At each step, we cannot place a queen if it has the same value
 --    (row + col) as a previous one (otherwise it would be under attack)
 -- 3. At each step, we cannot place a queen if it has the same value
 --    (row - col) as a previous one (otherwise it would be under attack)
 
 TRANS N = 2 -> (
-  abs(next(col[2]) - col[1]) != 1
+  abs(next(col[2]) - col[1]) != 1 &
+  next(col[2]) != col[1]
 );
 
 TRANS N = 3 -> (
   abs(next(col[3]) - col[1]) != 2 &
-  abs(next(col[3]) - col[2]) != 1
+  abs(next(col[3]) - col[2]) != 1 &
+  !(next(col[3]) in {col[1], col[2]})
 );
 
 TRANS N = 4 -> (
   abs(next(col[4]) - col[1]) != 3 &
   abs(next(col[4]) - col[2]) != 2 &
-  abs(next(col[4]) - col[3]) != 1
+  abs(next(col[4]) - col[3]) != 1 &
+  !(next(col[4]) in {col[1],col[2],col[3]})
 );
 
 TRANS N = 5 -> (
   abs(next(col[5]) - col[1]) != 4 &
   abs(next(col[5]) - col[2]) != 3 &
   abs(next(col[5]) - col[3]) != 2 &
-  abs(next(col[5]) - col[4]) != 1
+  abs(next(col[5]) - col[4]) != 1 &
+  !(next(col[5]) in {col[1],col[2],col[3],col[4]})
 );
 
 TRANS N = 6 -> (
@@ -178,7 +130,8 @@ TRANS N = 6 -> (
   abs(next(col[6]) - col[2]) != 4 &
   abs(next(col[6]) - col[3]) != 3 &
   abs(next(col[6]) - col[4]) != 2 &
-  abs(next(col[6]) - col[5]) != 1
+  abs(next(col[6]) - col[5]) != 1 &
+  !(next(col[6]) in {col[1],col[2],col[3],col[4],col[5]})
 );
 
 TRANS N = 7 -> (
@@ -187,7 +140,8 @@ TRANS N = 7 -> (
   abs(next(col[7]) - col[3]) != 4 &
   abs(next(col[7]) - col[4]) != 3 &
   abs(next(col[7]) - col[5]) != 2 &
-  abs(next(col[7]) - col[6]) != 1
+  abs(next(col[7]) - col[6]) != 1 &
+  !(next(col[7]) in {col[1],col[2],col[3],col[4],col[5],col[6]})
 );
 
 TRANS N = 8 -> (
@@ -197,13 +151,15 @@ TRANS N = 8 -> (
   abs(next(col[8]) - col[4]) != 4 &
   abs(next(col[8]) - col[5]) != 3 &
   abs(next(col[8]) - col[6]) != 2 &
-  abs(next(col[8]) - col[7]) != 1
+  abs(next(col[8]) - col[7]) != 1 &
+  !(next(col[8]) in {col[1],col[2],col[3],col[4],col[5],col[6],col[7]})
 );
 
 -- VERIFICATION FORMULAS
 -- a spec to find a solution to the problem both in LTL and CTL
 
 -- We always place 8 queens.
-SPEC AF N = 0;
+--SPEC ! E [N <= 8 U N = 0];
 
-LTLSPEC F N = 0;
+-- This specification will be violated, generating a solution.
+LTLSPEC G N != 0;
