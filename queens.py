@@ -1,20 +1,18 @@
 #!/usr/bin/env python3
 
-from subprocess import DEVNULL, PIPE, STDOUT, run
+from subprocess import STDOUT, check_output
 
 col = [0] * 8
 
-output = run(
+output = str(check_output(
     [
         'NuSMV',
         '-bmc',
         '-bmc_length', '8',
         'queens.smv'
     ],
-    stdout=PIPE,
-    stderr=STDOUT,
-    encoding='utf-8'
-).stdout.strip().split('\n')
+    stderr=STDOUT
+), 'utf-8').strip().split('\n')
 
 prefix = '    col['
 
