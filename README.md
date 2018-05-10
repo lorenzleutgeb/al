@@ -26,3 +26,33 @@ Solve the 8 Queens Problem: In a chess board, the goal is to place 8 queens in
 such a way that none of them is under attack by another one. Implement and
 describe specifications (both, in CTL and LTL) that provide solutions to the
 problem.
+
+To execute the implementation, run `queens.py` which will in turn run NuSMV
+with `queens.smv` as input and render the solution:
+
+```
+$ ./queens.py
+
+  A Solution for The Eight Queens Problem
+     ╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗
+     ║   │   │   │   │ ♕ │   │   │   ║ 8
+     ╟───┼───┼───┼───┼───┼───┼───┼───╢
+     ║   │ ♕ │   │   │   │   │   │   ║ 7
+     ╟───┼───┼───┼───┼───┼───┼───┼───╢
+     ║   │   │   │ ♕ │   │   │   │   ║ 6
+     ╟───┼───┼───┼───┼───┼───┼───┼───╢
+     ║   │   │   │   │   │ ♕ │   │   ║ 5
+     ╟───┼───┼───┼───┼───┼───┼───┼───╢
+     ║   │   │   │   │   │   │   │ ♕ ║ 4
+     ╟───┼───┼───┼───┼───┼───┼───┼───╢
+     ║   │   │ ♕ │   │   │   │   │   ║ 3
+     ╟───┼───┼───┼───┼───┼───┼───┼───╢
+     ║ ♕ │   │   │   │   │   │   │   ║ 2
+     ╟───┼───┼───┼───┼───┼───┼───┼───╢
+     ║   │   │   │   │   │   │ ♕ │   ║ 1
+     ╚═══╧═══╧═══╧═══╧═══╧═══╧═══╧═══╝
+       a   b   c   d   e   f   g   h
+
+FEN 4Q3/1Q6/3Q4/5Q2/7Q/2Q5/Q7/6Q1 w - -
+URL https://lichess.org/editor/4Q3/1Q6/3Q4/5Q2/7Q/2Q5/Q7/6Q1_w_-_-
+```
