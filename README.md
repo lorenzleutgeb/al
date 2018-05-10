@@ -20,12 +20,12 @@ to check the existence of a safe solution:
   1. All of the missionaries and cannibals cross the river;
   2. During the transitions to the goal state no missionary is eaten!
 
-### 8 Queens Problem (`queens.smv`)
+### Eight Queens Problem (`queens.smv`)
 
-Solve the 8 Queens Problem: In a chess board, the goal is to place 8 queens in
-such a way that none of them is under attack by another one. Implement and
-describe specifications (both, in CTL and LTL) that provide solutions to the
-problem.
+Solve the Eight Queens Problem: In a chess board, the goal is to place eight
+queens in such a way that none of them is under attack by another one.
+Implement and describe specifications (both, in CTL and LTL) that
+provide solutions to the problem.
 
 To execute the implementation, run `queens.py` which will in turn run NuSMV
 with `queens.smv` as input and render the solution:
