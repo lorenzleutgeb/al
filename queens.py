@@ -1,11 +1,26 @@
 #!/usr/bin/env python3
 
-from sys import stdin
+from subprocess import DEVNULL, PIPE, STDOUT, run
 
-col = []
+col = [0] * 8
 
-for ln in stdin:
-    col.append(int(ln.strip()) - 1)
+output = run(
+    [
+        'NuSMV',
+        '-bmc',
+        '-bmc_length', '8',
+        'queens.smv'
+    ],
+    stdout=PIPE,
+    stderr=STDOUT,
+    encoding='utf-8'
+).stdout.strip().split('\n')
+
+prefix = '    col['
+
+for ln in output:
+    if ln.startswith(prefix):
+        col[int(ln[len(prefix)]) - 1] = int(ln[len(prefix + '] = ') + 1]) - 1
 
 print(
     '\n' +

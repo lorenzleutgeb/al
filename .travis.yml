@@ -3,4 +3,4 @@ install:
 
 script:
   - ./river.sh
-  - ./queens.sh
+  - ./queens.py
