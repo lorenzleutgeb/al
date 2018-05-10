@@ -36,5 +36,9 @@ DEFINE
   safe := (m < 3 -> c >= m) & (m > 0 -> c <= m);
   goal := c = 0 & m = 0;
 
-SPEC ! E[safe U goal]
+SPEC ! E[safe U goal];
+
+-- TODO: This spec seems to work but generates counterexamples that are too
+--       long.
+LTLSPEC ! X(safe U goal);
 

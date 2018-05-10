@@ -9,6 +9,7 @@ output = str(check_output(
         'NuSMV',
         '-bmc',
         '-bmc_length', '8',
+        '-is',
         'queens.smv'
     ],
     stderr=STDOUT

@@ -198,11 +198,14 @@ TRANS N = 8 -> (
   abs(next(col[8]) - col[7]) != 1
 );
 
+DEFINE
+  goal := N = 0;
+
 -- VERIFICATION FORMULAS
 -- a spec to find a solution to the problem both in LTL and CTL
 
--- We always place 8 queens.
---SPEC ! E [N <= 8 U N = 0];
+-- TODO: Fix this spec...
+SPEC ! AG goal;
 
 -- This specification will be violated, generating a solution.
-LTLSPEC G N != 0;
+LTLSPEC G ! goal;
