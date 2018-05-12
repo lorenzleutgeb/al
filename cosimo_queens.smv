@@ -1,0 +1,132 @@
+-------------------------------------------------------------------------------
+-- The following program solves the 8 queens problem.
+--
+-- General Idea.
+-- We must place one queen in each row.
+-- At each NuSMV step, we place one queen in one row,
+--   starting with row 1 and ending with row 8.
+-- A queen can be placed only if it is not under attack.
+-- With this solution, every path of length 8 is a solution to the problem.
+--
+-- Idea of the implementation.
+-- A queen is under attack if it is placed in the same diagonal as another one.
+-- Queens in the same diagonal have the same value (row + col) or (row - col).
+-- 
+-- Hint: use bounded model checking to find *one* solution to the problem.
+--
+-------------------------------------------------------------------------------
+
+MODULE main
+
+-- the number of queens placed on the board
+VAR
+  N : 0..8;
+
+VAR
+  col           : array 1..8 of 0..8;
+
+INIT
+  (col[1] = 0) &
+  (col[2] = 0) &
+  (col[3] = 0) &
+  (col[4] = 0) &
+  (col[5] = 0) &
+  (col[6] = 0) &
+  (col[7] = 0) &
+  (col[8] = 0);
+
+ASSIGN
+  init(N) := 1;
+  next(N) := (N + 1) mod 9;
+
+TRANS N != 0;
+
+-- At each step we place one queen
+TRANS
+  ((N=1) -> (next(col[1]) in {1,2,3,4,5,6,7,8})) &
+  ((N=2) -> (next(col[2]) in {1,2,3,4,5,6,7,8})) &
+  ((N=3) -> (next(col[3]) in {1,2,3,4,5,6,7,8})) &
+  ((N=4) -> (next(col[4]) in {1,2,3,4,5,6,7,8})) &
+  ((N=5) -> (next(col[5]) in {1,2,3,4,5,6,7,8})) &
+  ((N=6) -> (next(col[6]) in {1,2,3,4,5,6,7,8})) &
+  ((N=7) -> (next(col[7]) in {1,2,3,4,5,6,7,8})) &
+  ((N=8) -> (next(col[8]) in {1,2,3,4,5,6,7,8}));
+
+-- At each step, we cannot place a queen in the same column as a previous one
+TRANS
+  ((N=2) -> (next(col[2]) != col[1])) &
+  ((N=3) -> (next(col[3]) != col[1] &
+             next(col[3]) != col[2])) &
+  ((N=4) -> (next(col[4]) != col[1] &
+             next(col[4]) != col[2] &
+             next(col[4]) != col[3])) &
+  ((N=5) -> (next(col[5]) != col[1] &
+             next(col[5]) != col[2] &
+             next(col[5]) != col[3] &
+             next(col[5]) != col[4])) &
+  ((N=6) -> (next(col[6]) != col[1] &
+             next(col[6]) != col[2] &
+             next(col[6]) != col[3] &
+             next(col[6]) != col[4] &
+             next(col[6]) != col[5])) &
+  ((N=7) -> (next(col[7]) != col[1] &
+             next(col[7]) != col[2] &
+             next(col[7]) != col[3] &
+             next(col[7]) != col[4] &
+             next(col[7]) != col[5] &
+             next(col[7]) != col[6])) &
+  ((N=8) -> (next(col[8]) != col[1] &
+             next(col[8]) != col[2] &
+             next(col[8]) != col[3] &
+             next(col[8]) != col[4] &
+             next(col[8]) != col[5] &
+             next(col[8]) != col[6] &
+             next(col[8]) != col[7]));
+
+-- At each step, we cannot place a queen that attacks a previous one diagonally
+TRANS
+  ((N=2) -> (abs(next(col[2]) - col[1]) != 1)) &
+  ((N=3) -> (abs(next(col[3]) - col[1]) != 2 &
+             abs(next(col[3]) - col[2]) != 1)) &
+  ((N=4) -> (abs(next(col[4]) - col[1]) != 3 &
+             abs(next(col[4]) - col[2]) != 2 &
+             abs(next(col[4]) - col[3]) != 1)) &
+  ((N=5) -> (abs(next(col[5]) - col[1]) != 4 &
+             abs(next(col[5]) - col[2]) != 3 &
+             abs(next(col[5]) - col[3]) != 2 &
+             abs(next(col[5]) - col[4]) != 1)) &
+  ((N=6) -> (abs(next(col[6]) - col[1]) != 5 &
+             abs(next(col[6]) - col[2]) != 4 &
+             abs(next(col[6]) - col[3]) != 3 &
+             abs(next(col[6]) - col[4]) != 2 &
+             abs(next(col[6]) - col[5]) != 1)) &
+  ((N=7) -> (abs(next(col[7]) - col[1]) != 6 &
+             abs(next(col[7]) - col[2]) != 5 &
+             abs(next(col[7]) - col[3]) != 4 &
+             abs(next(col[7]) - col[4]) != 3 &
+             abs(next(col[7]) - col[5]) != 2 &
+             abs(next(col[7]) - col[6]) != 1)) &
+  ((N=8) -> (abs(next(col[8]) - col[1]) != 7 &
+             abs(next(col[8]) - col[2]) != 6 &
+             abs(next(col[8]) - col[3]) != 5 &
+             abs(next(col[8]) - col[4]) != 4 &
+             abs(next(col[8]) - col[5]) != 3 &
+             abs(next(col[8]) - col[6]) != 2 &
+             abs(next(col[8]) - col[7]) != 1));
+
+-- Once a queen has been placed, it cannot be moved
+TRANS
+  ((N>1) -> (next(col[1]) = col[1])) &
+  ((N>2) -> (next(col[2]) = col[2])) &
+  ((N>3) -> (next(col[3]) = col[3])) &
+  ((N>4) -> (next(col[4]) = col[4])) &
+  ((N>5) -> (next(col[5]) = col[5])) &
+  ((N>6) -> (next(col[6]) = col[6])) &
+  ((N>7) -> (next(col[7]) = col[7])) &
+  ((N>8) -> (next(col[8]) = col[8]));
+
+DEFINE
+  goal := N = 0;
+
+SPEC  AG N>0; --this works adding the optional command "-AG -ils"
+LTLSPEC ! F goal;  --this works with the optional command " -bmc -bmc_length 8 -is"

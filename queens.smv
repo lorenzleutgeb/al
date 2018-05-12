@@ -205,7 +205,7 @@ DEFINE
 -- a spec to find a solution to the problem both in LTL and CTL
 
 -- TODO: Fix this spec...
-SPEC ! AG goal;
+SPEC goal;
 
 -- This specification will be violated, generating a solution.
-LTLSPEC G ! goal;
+LTLSPEC  goal;
