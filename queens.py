@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 
 from subprocess import STDOUT, check_output
+from sys        import argv, exit
+
+presets = {
+    'ltl': ['-bmc', '-bmc_length', '8', '-is'],
+    'ctl': ['-AG', '-ils'],
+}
+
+if len(argv) != 2 or argv[1] not in presets:
+    print('Expecting exactly one argument from {}!'.format(set(presets.keys())))
+    exit(1)
 
 col = [0] * 8
 
 output = str(check_output(
-    [
-        'NuSMV',
-        '-bmc',
-        '-bmc_length', '8',
-        '-is',
-        'queens.smv'
-    ],
+    ['NuSMV'] +
+    presets[argv[1]] +
+    ['queens.smv'],
     stderr=STDOUT
 ), 'utf-8').strip().split('\n')
 

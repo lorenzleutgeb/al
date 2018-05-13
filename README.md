@@ -31,7 +31,7 @@ To execute the implementation, run `queens.py` which will in turn run NuSMV
 with `queens.smv` as input and render the solution:
 
 ```
-$ ./queens.py
+$ ./queens.py ctl
 
   A Solution for The Eight Queens Problem
      ╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗

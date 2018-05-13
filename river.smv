@@ -1,44 +1,33 @@
 MODULE main
 VAR
-  c : 0..3; -- Number of cannibals that are on the wrong side.
-  m : 0..3; -- Number of missionaries that are on the wrong side.
-  b : boolean; -- Number of boats (max. 1) that are on the wrong side.
-
-  mb : 0..2; -- Number of missionaries on the b.
-  cb : 0..2; -- Number of cannibals on the b.
+  c : 0..3;   -- Number of cannibals that are on the wrong side.
+  m : 0..3;   -- Number of missionaries that are on the wrong side.
+  b : {-1,1}; -- Number of boats (max. 1) that are on the wrong side.
+              -- A value of -1 means that the boat is on the right side.
+  mb : 0..2;  -- Number of missionaries on the boat.
+  cb : 0..2;  -- Number of cannibals on the boat.
 
 INVAR mb + cb > 0  -- There is always someone on the boat (no run wasted).
 INVAR mb + cb <= 2 -- Boat has a maximum capacity of 2 people.
 
--- In the initial state, everything is on the wrong side.
-ASSIGN
-  init(c) := 3;
-  init(m) := 3;
-  init(b) := TRUE;
+-- All missionaries and cannibals as well as the boat are on the wrong side.
+INIT c = 3 & m = 3 & b = 1 & mb + cb > 0;
 
--- The boat is not on the wrong side. This means that in the next side:
---  1. The boat will be on the wrong side (it travels the river).
---  2. The number of people on the wrong side will increase respectively.
-TRANS !b ->
-  next(b) = TRUE &
-  next(c) = c + cb &
-  next(m) = m + mb
-
--- Analogous.
-TRANS b ->
-  next(b) = FALSE &
-  next(c) = c - cb &
-  next(m) = m - mb
+-- The boat alternates between the two sides and cannibal/missionary counts
+-- change accordingly.
+TRANS
+  next(c) = c - cb * b &
+  next(m) = m - mb * b &
+  next(b) = b * -1
+;
 
 -- Goal is reached if no one is on the wrong side. Safety is met if there are
 -- always more missionaries than cannibals on either side.
 DEFINE
-  safe := (m < 3 -> c >= m) & (m > 0 -> c <= m);
+  safe := (m != 0 & m != 3) -> (c = m);
+--  safe := (m < 3 -> c >= m) & (m > 0 -> c <= m);
   goal := c = 0 & m = 0;
 
 SPEC ! E[safe U goal];
-
--- TODO: This spec seems to work but generates counterexamples that are too
---       long.
-LTLSPEC ! X(safe U goal);
+LTLSPEC ! (safe U goal);
 
