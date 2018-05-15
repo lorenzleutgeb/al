@@ -21,7 +21,7 @@ to check the existence of a safe solution:
   2. During the transitions to the goal state no missionary is eaten!
 
                                                                                                                         
-To execute the implementation, run `river.py` which will in turn run NuSMV                                             
+To execute the implementation, run `river.py` which will in turn run NuSMV
 with `river.smv` as input and render the solution:                                                                     
                                                                                                                         
 ```                                                                                                                     
