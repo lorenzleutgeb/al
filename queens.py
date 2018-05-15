@@ -29,7 +29,7 @@ for ln in output:
 
 print(
     '\n' +
-    '  A Solution for The Eight Queens Problem\n'
+    '  A Solution for The Eight Queens Problem\n\n'
     '     ╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗\n'+
     '     ╟───┼───┼───┼───┼───┼───┼───┼───╢\n'.join(['     ║ ' + ' │ '.join(['♕' if i == ln else ' ' for i in range(8)]) + ' ║ ' + str(8 - j) + '\n' for j, ln in enumerate(col)]) +
     '     ╚═══╧═══╧═══╧═══╧═══╧═══╧═══╧═══╝\n' +

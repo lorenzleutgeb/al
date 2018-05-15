@@ -92,6 +92,7 @@ with `queens.smv` as input and render the solution:
 $ ./queens.py ctl
 
   A Solution for The Eight Queens Problem
+
      ╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗
      ║   │   │   │   │ ♕ │   │   │   ║ 8
      ╟───┼───┼───┼───┼───┼───┼───┼───╢
