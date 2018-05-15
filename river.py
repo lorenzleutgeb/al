@@ -5,7 +5,9 @@ from subprocess import STDOUT, check_output
 from sys        import argv, exit
 
 presets = {
-    'ltl': ['-is'],
+    # Heuristic for LTL: We know that there is a solution with 13 states,
+    # otherwise NuSMV delivers a longer counterexample, which is unintuitive.
+    'ltl': ['-is', '-bmc', '-bmc_length', '13'],
     'ctl': ['-ils'],
 }
 
@@ -49,47 +51,31 @@ def line(neutral, spec):
     return result
 
 def emit():
-    global cnt
-
-    print()
-
-    cnt = cnt + 1
-    print("Day " + str(cnt) + ":")
-
-    #print(state)
-
     m, c, mb, cb, b = state['m'], state['c'], state['mb'], state['cb'], state['b']
-    print(line(S, [6, m * 2, (M, N - m), 4, (C, N - c)]))
-    print(W * ((2 * 3 + 2 + 2 * N) * 2))
-    print(line(S, [6, (M, m), (N - m) * 2, 4, (N - c) * 2, (C, c)]))
-
-    if m + c == 0:
-        print("NOTE: Goal was reached, yay!")
-        return
-
-    if not(not(m != 0 and m != 3) or (c == m)):
-        print("NOTE: Safety is violated!")
-
-    print("Action:")
 
     srm = mb if b == -1 else 0
     src = cb if b == -1 else 0
-    swm = mb * b
-    swc = cb * b
+    swm = mb if b == 1 else 0
+    swc = cb if b == 1 else 0
 
-    print(line(S, [6, m * 2, srm * 2, (M, N - m - srm), 4, (C, N - c - src)]))
-    print(line(W, [11, (S, 1), (M, mb), (C, cb), (S, 2 - (mb + cb)), (S, 1), 11]) + ' ' + ('↑' if b == 1 else '↓'))
-    print(line(S, [6, (M, m - swm), (N - m - srm) * 2, 4, (N - c + swc) * 2, (C, c - swc)]))
+    print(line(S, [20, m * 2, srm * 2, (M, N - m - srm), 4, (C, N - c - src)]))
+    print('    Action ' + str(cnt).rjust(2) + ' ' + line(W, [11, (S, 1), (M, mb), (C, cb), (S, (2 - (mb + cb)) * 2), (S, 1), 11]) + ' ' + ('↑' if b == 1 else '↓'))
+    print(line(S, [20, (M, m - swm), (N - m + swm) * 2, 4, (N - c + swc) * 2, (C, c - swc)]))
     print()
+
+print("\n  A Solution for The Missionaries and Cannibals Problem\n")
 
 for ln in output:
     ln = ln.strip()
 
     # New state.
     if ln.startswith('->'):
-        emit()
+        if cnt > 0:
+            emit()
+        cnt = cnt + 1
+
     else:
-        m = match("(m|c|mb|cb|b) = ([A-Z0-9\-]+)", ln)
+        m = match("(m|c|mb|cb|b) = (\-?[0-9])", ln)
         if not m:
             continue
 
